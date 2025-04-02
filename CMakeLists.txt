@@ -4,4 +4,5 @@ idf_component_register(SRCS "esp-Loggernet.c"
                         "esp_driver_gpio"
                         "esp_driver_uart"
                         "esp_wifi"
-                        "nvs_flash")
+                        "nvs_flash"
+                        "mqtt")

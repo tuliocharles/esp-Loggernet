@@ -4,3 +4,6 @@ dependencies:
     # for local developmente, use the local
     # copy of the component
     override_path: "../../../"
+  idf: ">=4.4"
+  protocol_examples_common:
+    path: ${IDF_PATH}/examples/common_components/protocol_examples_common 

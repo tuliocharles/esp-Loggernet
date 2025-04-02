@@ -3,16 +3,30 @@ dependencies:
     source:
       type: idf
     version: 5.4.0
+  protocol_examples_common:
+    dependencies: []
+    source:
+      path: C:\Users\tulio\esp\v5.4\esp-idf\examples\common_components\protocol_examples_common
+      type: local
+    version: '*'
   tuliocharles/esp-Loggernet:
     dependencies:
     - name: idf
       version: '>=4.4'
+    - name: protocol_examples_common
+      path: ${IDF_PATH}/examples/common_components/protocol_examples_common
+    - name: espressif/esp_wifi_remote
+      rules:
+      - if: target in [esp32p4, esp32h2]
+      version: '>=0.1.12'
     source:
-      path: D:\SSD\DATA\projetos_versao_0\RealTimerEmbarcados\EFM\final\component\esp-Loggernet
+      path: D:\SSD\DATA\rascunho\esp-Loggernet
       type: local
     version: 0.0.0
 direct_dependencies:
+- idf
+- protocol_examples_common
 - tuliocharles/esp-Loggernet
-manifest_hash: 9c9a69d0c8c8160889d9bf7e42bdb211824e305ece6be85d8b38f4ac6fb8ee23
+manifest_hash: 4a410fd414e7bd1fad4ebb505c7907df48bd54ec6a8bfecf23767fdf613ae92e
 target: esp32
 version: 2.0.0
