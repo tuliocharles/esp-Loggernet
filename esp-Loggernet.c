@@ -12,7 +12,7 @@ Trabalho feito em tempo real para acompanhar os alunos
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_chip_info.h"
-#include "esp_flash.h"
+
 
 #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE // definição necessária para aumentar o nível de verbosidade -- definido antes de esp_log.h
 #include "esp_log.h"
@@ -26,21 +26,21 @@ Trabalho feito em tempo real para acompanhar os alunos
 
 
 // Bibliotecas inseridas Prática 03 - TIMER
-#include "driver/gptimer.h"
+//#include "driver/gptimer.h"
 
 
 // Bibliotecas inseridas Pratica 04 - PWM
 #include "freertos/semphr.h"
-#include "driver/ledc.h"
+//#include "driver/ledc.h"
 #include "esp_err.h"
 
 
 // Bibliotecas inseridas Pratica 05 - ADC
 
 #include "soc/soc_caps.h"
-#include "esp_adc/adc_oneshot.h"
-#include "esp_adc/adc_cali.h"
-#include "esp_adc/adc_cali_scheme.h"
+//#include "esp_adc/adc_oneshot.h"
+//#include "esp_adc/adc_cali.h"
+//#include "esp_adc/adc_cali_scheme.h"
 
 
 // Bibliotecas inseridas Pratica 06 - UART
@@ -53,13 +53,7 @@ Trabalho feito em tempo real para acompanhar os alunos
 // Bibliotecas inseridas Pratica 07 - I2C
 
 
-#include "esp_timer.h"
-#include "esp_lcd_panel_io.h"
-#include "esp_lcd_panel_ops.h"
-#include "driver/i2c.h"
-#include "lvgl.h"
-#include "esp_lvgl_port.h"
-#include "esp_lcd_panel_vendor.h"
+
 
 
 // Bibliotecas inseridas Pratica 08 - MQTT
@@ -472,30 +466,6 @@ static void uart_task(void *arg)
 static void main_task(void)
 {
 
-    /* Print chip information */
-    esp_chip_info_t chip_info;
-    uint32_t flash_size;
-    esp_chip_info(&chip_info);
-    ESP_LOGI(TAGSystem, "This is %s chip with %d CPU core(s), WiFi%s%s%s, ",
-           CONFIG_IDF_TARGET,
-           chip_info.cores,
-           (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
-           (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "",
-           (chip_info.features & CHIP_FEATURE_IEEE802154) ? ", 802.15.4 (Zigbee/Thread)" : "");
-
-    unsigned major_rev = chip_info.revision / 100;
-    unsigned minor_rev = chip_info.revision % 100;
-    ESP_LOGI(TAGSystem, "silicon revision v%d.%d, ", major_rev, minor_rev);
-    if(esp_flash_get_size(NULL, &flash_size) != ESP_OK) {
-        ESP_LOGE(TAGSystem, "Get flash size failed");
-        return;
-    }
-
-    ESP_LOGI(TAGSystem, "%" PRIu32 "MB %s flash\n", flash_size / (uint32_t)(1024 * 1024),
-           (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
-
-    ESP_LOGI(TAGSystem, "Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
-
     /**************************************************/
     /******************** I/O *************************/
     /**************************************************/
@@ -640,7 +610,7 @@ static void main_task(void)
    
 }
 
-void init_esp-Loggernet(char *uri, char *clientid){
+void init_espLoggernet(char *uri, char *clientid){
 
     // Libera a memória previamente alocada, se houver
     if (Client_ID != NULL) {

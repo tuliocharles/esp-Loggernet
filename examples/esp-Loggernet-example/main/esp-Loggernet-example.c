@@ -7,6 +7,6 @@
 void app_main(void)
 {
   
-    init_esp-Loggernet(uri_default, Client_ID) ;
+    init_espLoggernet(uri_default, Client_ID) ;
 }
 

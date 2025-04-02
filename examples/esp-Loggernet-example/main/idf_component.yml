@@ -1,5 +1,5 @@
 dependencies:
-  tuliocharles/esp-loggernet-example:
+  tuliocharles/esp-Loggernet:
     version: "*"
     # for local developmente, use the local
     # copy of the component
