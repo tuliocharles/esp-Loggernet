@@ -1,0 +1,16 @@
+dependencies:
+  idf:
+    source:
+      type: idf
+    version: 5.4.0
+  tuliocharles/esp-loggernet-example:
+    dependencies: []
+    source:
+      path: D:\SSD\DATA\projetos_versao_0\RealTimerEmbarcados\EFM\final\component\esp-Loggernet
+      type: local
+    version: '*'
+direct_dependencies:
+- tuliocharles/esp-loggernet-example
+manifest_hash: ae59ad21992796f7c72e6e9fd176d8b03c78a2666e4f1c1e25eb8c8bcf280363
+target: esp32
+version: 2.0.0

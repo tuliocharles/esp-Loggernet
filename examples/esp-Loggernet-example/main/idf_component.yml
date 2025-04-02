@@ -1,0 +1,6 @@
+dependencies:
+  tuliocharles/esp-loggernet-example:
+    version: "*"
+    # for local developmente, use the local
+    # copy of the component
+    override_path: "../../../"

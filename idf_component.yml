@@ -1,0 +1,12 @@
+version: 0.0.0
+
+description: LoggerNet MQTT comunication
+
+url: https://github.com/tuliocharles/esp-Loggernet
+repository: https://github.com/tuliocharles/esp-Loggernet.git
+
+maintainers:
+  - "Túlio Carvalho <tulio.cefetmg@gmail.com"
+
+dependencies:
+  idf: ">=4.4"
