@@ -20,5 +20,6 @@ files:
     - build/
     - sdkconfig
     - "**/dependencies.lock"
+    - .vscode/
 
   
