@@ -1,11 +1,9 @@
 /*
-
-Projeto da disciplina Sistemas Embarcados
-Trabalho feito em tempo real para acompanhar os alunos
-
+Copyright (c) 2025 Tulio Carvalho
+Licensed under the MIT License. See LICENSE file for details.
 */
 
-// Bibliotecas inseridas Prática 01 - Hello World
+
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
@@ -13,80 +11,39 @@ Trabalho feito em tempo real para acompanhar os alunos
 #include "freertos/task.h"
 #include "esp_chip_info.h"
 
-
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE // definição necessária para aumentar o nível de verbosidade -- definido antes de esp_log.h
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE 
 #include "esp_log.h"
 
-
-// Bibliotecas inseridas Prática 02 - GPIO
 #include <string.h>
 #include <stdlib.h>
 #include "freertos/queue.h"
 #include "driver/gpio.h"
 
-
-// Bibliotecas inseridas Prática 03 - TIMER
-//#include "driver/gptimer.h"
-
-
-// Bibliotecas inseridas Pratica 04 - PWM
 #include "freertos/semphr.h"
-//#include "driver/ledc.h"
 #include "esp_err.h"
 
-
-// Bibliotecas inseridas Pratica 05 - ADC
-
 #include "soc/soc_caps.h"
-//#include "esp_adc/adc_oneshot.h"
-//#include "esp_adc/adc_cali.h"
-//#include "esp_adc/adc_cali_scheme.h"
-
-
-// Bibliotecas inseridas Pratica 06 - UART
-
 #include "esp_system.h"  //?
 #include "driver/uart.h" 
 #include "string.h"
-
-
-// Bibliotecas inseridas Pratica 07 - I2C
-
-
-
-
-
-// Bibliotecas inseridas Pratica 08 - MQTT
-
 #include <stdint.h>
 #include <stddef.h>
-
 #include "esp_wifi.h"
 #include "esp_system.h"
 #include "nvs_flash.h"
 #include "esp_event.h"
 #include "esp_netif.h"
 #include "protocol_examples_common.h"
-
-
 #include "lwip/sockets.h"
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
-
 #include "mqtt_client.h"
 
 
-static char *Client_ID 
-static char *uri_default  
-
 /*************************************************/
-/************* Tags usadas no progama*************/
+/************* Tags *************/
 /*************************************************/
-static const char* TAGSystem = "Sistema";
 static const char* TAGGpio = "GPIO";
-static const char* TAGtimer = "TIMER";
-static const char* TAGPWM = "PWM";
-static const char* TAGADC = "ADC";
 static const char *TAGUART = "RX_TASK";
 static const char *TAGMQTT = "MQTT_EXAMPLE";
 
@@ -94,75 +51,20 @@ static const char *TAGMQTT = "MQTT_EXAMPLE";
 /************** DEFINES **************************/
 /*************************************************/
 
-//******** Configuração de I/O's inputs *********************/
 #define GPIO_INPUT_IO_0     0//CONFIG_GPIO_INPUT_0
-
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_0)) 
-
-//******* Configuração de I/O's saída ***************/
 
 #define GPIO_OUTPUT_IO_0    2//CONFIG_GPIO_OUTPUT_1
 #define GPIO_OUTPUT_PIN_SEL  (1ULL<<GPIO_OUTPUT_IO_0) 
 
 #define ESP_INTR_FLAG_DEFAULT 0 // Definição de tratamento de Flag default = 0 ;
 
-//********* Define main clock timer  ****************/
-
-#define FREQ_CLOCK_BASIS 1000000 // 1 MHz
-#define Alarm_tick_count 100000 //
-#define One_second FREQ_CLOCK_BASIS/Alarm_tick_count // 10
-
-//******** Define PWMs ***************************//
-#define LEDC_TIMER                  LEDC_TIMER_0
-#define LEDC_MODE                   LEDC_HIGH_SPEED_MODE
-
-#define LEDC_OUTPUT_IO_CHANEL_0     (17) // Define the output GPIO (26) blue (16) GREEN
-#define LEDC_CHANNEL_LED            LEDC_CHANNEL_0
-
-#define LEDC_OUTPUT_IO_CHANEL_2     (26) // Define the output GPIO (26) blue (16) GREEN
-#define LEDC_CHANNEL_MQTT1            LEDC_CHANNEL_2
-
-#define LEDC_OUTPUT_IO_CHANEL_3     (16) // Define the output GPIO (26) blue (16) GREEN
-#define LEDC_CHANNEL_MQTT2            LEDC_CHANNEL_3
-
-#define LEDC_OUTPUT_IO_CHANEL_1     (33) // Define the output GPIO RAMP - 33
-#define LEDC_CHANNEL_RAMP           LEDC_CHANNEL_1
-
-
-#define LEDC_DUTY_RES           LEDC_TIMER_13_BIT // Set duty resolution to 13 bits
-#define LEDC_DUTY               (4500) // Set duty to 50%. ((2 ** 13) - 1) * 50% = 4095
-#define LEDC_FREQUENCY          (5000) // Frequency in Hertz. Set frequency at 5 kHz
-
-/******** Define ADC **************************/
-#define ADC1_READPWM                 ADC_CHANNEL_3
-//#define EXAMPLE_ADC2_CHAN0          ADC_CHANNEL_0 NÃO VAI SUAR O 2 NESTE TRABALHO
-
-#define ADC_ATTEN           ADC_ATTEN_DB_11
-
-
-/********** Define UART **************************/
-
 #define TXD_PIN (GPIO_NUM_5) 
 #define RXD_PIN (GPIO_NUM_4)
 
-/**********************DEFINE I2C OLED ****************/
-
-#define I2C_HOST  0
-
-#define EXAMPLE_LCD_PIXEL_CLOCK_HZ    (400 * 1000)
-#define EXAMPLE_PIN_NUM_SDA           19
-#define EXAMPLE_PIN_NUM_SCL           18
-#define EXAMPLE_PIN_NUM_RST           -1
-#define EXAMPLE_I2C_HW_ADDR           0x3C
-
-#define EXAMPLE_LCD_H_RES              128
-#define EXAMPLE_LCD_V_RES              64
-
-// Bit number used to represent command and parameter
-#define EXAMPLE_LCD_CMD_BITS           8
-#define EXAMPLE_LCD_PARAM_BITS         8
-
 #define qos_ex 0
+static char *Client_ID; 
+static char *uri_default;  
 
 
 /**********************************************/
@@ -189,36 +91,22 @@ typedef struct {
 } pwmqtt_element_t ;
 
 
-/*** ADC  */
 typedef struct {
    int adc_raw;
    int voltage;
 } adc_element_t ;
 
-/* prototipação de funções*/
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
 
-/******* Variáveis  ************************/
-
-/* UART */
 static const int RX_BUF_SIZE = 1024;
 
-/* I2C */
-lv_disp_t *disp;
-lv_obj_t *label_1;
-lv_obj_t *label;
-
 /**********************************************/
-/*************** Filas ************************/
+/*************** Queue ************************/
 /**********************************************/
 
 static QueueHandle_t efm_queue = NULL;
 static QueueHandle_t efm_atualiza = NULL;
 static SemaphoreHandle_t gpio_semaphoro = NULL;
-
-/****************************************************
- **************** BIBLIOTECA ***********************
-*****************************************************/
 
 bool strcmpr_tc(char *str1, char *str2, int str_len)
 {
@@ -242,7 +130,6 @@ bool strcmpr_tc(char *str1, char *str2, int str_len)
 
     return result;
 }
-
 
 /***********************************************/
 /************* INITs ***************************/
@@ -287,9 +174,8 @@ static void mqtt_app_start(char *uri)
 }
 
 /****************************************************/
-/************* Interrupções *************************/
+/************* Interruptions *************************/
 /****************************************************/
-
 esp_mqtt_client_handle_t client = NULL;
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
@@ -458,14 +344,12 @@ static void uart_task(void *arg)
     free(data);
 }
 
-
 /****************************************************/
 /**************** Main ******************************/
 /*****************************************************/
 
-static void main_task(void)
+static void main_task(void *arg)
 {
-
     /**************************************************/
     /******************** I/O *************************/
     /**************************************************/
@@ -563,22 +447,14 @@ static void main_task(void)
     /*************** tasks *******************************/
     /*****************************************************/
    
-
-    //start gpio task
     xTaskCreate(gpio_task_botao, "gpio_task_botao", 2048, NULL, 5, NULL);
     
-    //start UART task
     xTaskCreate(uart_task, "uart_task", 8192, NULL, 20, NULL);
 
-
     /******************************************************/
-    /*************Configurando níveis de LOG **************/
+    /*************LOG **************/
     /******************************************************/
-    esp_log_level_set(TAGSystem, ESP_LOG_INFO);
     esp_log_level_set(TAGGpio, ESP_LOG_ERROR);
-    esp_log_level_set(TAGtimer, ESP_LOG_ERROR);
-    esp_log_level_set(TAGPWM, ESP_LOG_ERROR);
-    esp_log_level_set(TAGADC, ESP_LOG_ERROR);
     esp_log_level_set(TAGUART, ESP_LOG_INFO);
 
 
@@ -590,15 +466,15 @@ static void main_task(void)
             
             xQueueSendToBack(efm_atualiza, &efm_status, 10/ portTICK_PERIOD_MS);
             if (efm_status == 0){
-                gpio_set_level(GPIO_OUTPUT_IO_0, 0); //desliga led
-                vTaskDelay(3000 / portTICK_PERIOD_MS); // espera 3 segundo
-                gpio_set_level(GPIO_OUTPUT_IO_0, 1);// liga led
+                gpio_set_level(GPIO_OUTPUT_IO_0, 0); 
+                vTaskDelay(3000 / portTICK_PERIOD_MS); 
+                gpio_set_level(GPIO_OUTPUT_IO_0, 1);
 
             } else {
-                for(int iii = 0; iii <= efm_status; iii++){ // repete efm_status vezes.
-                     gpio_set_level(GPIO_OUTPUT_IO_0, 0); //desliga led
-                     vTaskDelay(500 / portTICK_PERIOD_MS); // espera 0,5 segundo
-                     gpio_set_level(GPIO_OUTPUT_IO_0, 1);// liga led
+                for(int iii = 0; iii <= efm_status; iii++){ 
+                     gpio_set_level(GPIO_OUTPUT_IO_0, 0); 
+                     vTaskDelay(500 / portTICK_PERIOD_MS); 
+                     gpio_set_level(GPIO_OUTPUT_IO_0, 1);
                      vTaskDelay(500 / portTICK_PERIOD_MS);
                 }
                 
@@ -612,7 +488,6 @@ static void main_task(void)
 
 void init_espLoggernet(char *uri, char *clientid){
 
-    // Libera a memória previamente alocada, se houver
     if (Client_ID != NULL) {
         free(Client_ID);
     }
@@ -620,19 +495,18 @@ void init_espLoggernet(char *uri, char *clientid){
         free(uri_default);
     }
     
-    // Aloca a memória necessária para armazenar a nova string (incluindo o terminador '\0')
     uri_default = malloc(strlen(uri) + 1);
     Client_ID = malloc(strlen(clientid) + 1);
     
     if (uri_default != NULL) {
-        strcpy(global_str, str);  // Copia o conteúdo da string para a memória alocada
+        strcpy(uri_default, uri);  
     } else {
-        printf("Erro: Falha na alocação de memória.\n");
+        printf("Error.\n");
     }
     if (Client_ID != NULL) {
-        strcpy(global_str, str);  // Copia o conteúdo da string para a memória alocada
+        strcpy(Client_ID, clientid);  
     } else {
-        printf"Erro: Falha na alocação de memória.\n");
+        printf("Error.\n");
     }
 
     xTaskCreate(main_task, "main_task", 4096, NULL, 2, NULL);
