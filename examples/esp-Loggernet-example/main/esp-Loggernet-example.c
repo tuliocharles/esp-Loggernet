@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include "esp-Loggernet.h"
 
-//#define Client_ID "MyID"
-//#define uri_default  "mqtt://MyUser:MyPassword@broker.adress.com:1883" 
-
-#define Client_ID "com2efm"
-#define uri_default  "mqtt://efm2com:efm2com@node02.myqtthub.com:1883"
+#define Client_ID "MyID"
+#define uri_default  "mqtt://MyUser:MyPassword@broker.adress.com:1883" 
 
 void app_main(void)
 {
